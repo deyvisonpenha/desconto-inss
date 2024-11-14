@@ -26,8 +26,6 @@ gem "jbuilder"
 # gem "bcrypt", "~> 3.1.7"
 
 # Gems that will be usefull in the project
-gem 'bootstrap', '~> 5.3.3'
-gem 'dartsass-sprockets'
 gem 'chartkick'
 gem 'groupdate'
 gem 'kaminari'         # Pagination
@@ -70,3 +68,5 @@ group :test do
 end
 
 gem "faker", "~> 3.5"
+
+gem "tailwindcss-rails", "~> 3.0"
