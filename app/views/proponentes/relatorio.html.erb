@@ -1,0 +1,58 @@
+<%= javascript_include_tag "https://cdn.jsdelivr.net/npm/chart.js", "data-turbo-track": "reload" %>
+<%= link_to 'Voltar', proponentes_path, class: 'inline-block px-4 py-2 font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 no-underline' %>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+  <h2 class="text-2xl font-bold mb-6">Relatório de Funcionários por Faixa Salarial</h2>
+
+  <div class="flex flex-col lg:flex-row gap-6">
+    <!-- Lista de dados -->
+    <div class="w-full lg:w-2/5">
+      <div class="bg-white rounded-lg shadow">
+        <div class="p-6">
+          <h5 class="text-lg font-semibold mb-4">Dados por Faixa Salarial</h5>
+          <% @faixas_salariais.each do |faixa, quantidade| %>
+            <div class="flex justify-between py-3 border-b border-gray-200 last:border-b-0">
+              <span class="text-gray-600 text-base"><%= faixa %></span>
+              <strong class="font-medium text-base"><%= quantidade %></strong>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfico -->
+    <div class="w-full lg:w-3/5">
+      <div class="bg-white rounded-lg shadow">
+        <div class="p-6">
+          <canvas id="chart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('chart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: <%= raw @faixas_salariais.keys.to_json %>,
+        datasets: [{
+          label: 'Quantidade de Funcionários',
+          data: <%= raw @faixas_salariais.values.to_json %>,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  });
+</script>
