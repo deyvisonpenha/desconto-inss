@@ -1,0 +1,105 @@
+<%= form_with(model: proponente, data: { turbo: false }) do |form| %>
+  <% if proponente.errors.any? %>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+      <h4 class="font-bold">Erros:</h4>
+      <ul class="list-disc list-inside">
+        <% proponente.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :nome, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.text_field :nome, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :cpf, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.text_field :cpf, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :data_nascimento, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.date_field :data_nascimento, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :endereco, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.text_field :endereco, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :bairro, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.text_field :bairro, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :cidade, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.text_field :cidade, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :estado, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.text_field :estado, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :cep, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.text_field :cep, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :telefone, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.text_field :telefone, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :salario, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.number_field :salario, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", step: 0.01, id: 'proponente_salario' %>
+    <small class="text-gray-600">Desconto INSS: R$ <span id="desconto_inss">0.00</span></small>
+  </div>
+  
+  <div class="flex my-6 justify-end gap-3">
+    <%= link_to 'Voltar', proponentes_path, class: 'inline-block px-4 py-2 font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 no-underline' %>
+    <%= form.submit class: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer' %>
+  </div>
+  
+<% end %>
+
+<script>
+  function calculateInss(salario) {
+    fetch(`/proponentes/${<%= proponente.id || 0 %>}/calcula_inss?salario=${salario}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('desconto_inss').innerText = data.desconto.toFixed(2);
+      });
+  }
+
+  function initializeCalculator() {
+    const salarioInput = document.getElementById('proponente_salario');
+    
+    // Calculate immediately if there's an initial value
+    if (salarioInput.value) {
+      calculateInss(salarioInput.value);
+    }
+
+    // Calculate on input change
+    salarioInput.addEventListener('input', function() {
+      calculateInss(this.value);
+    });
+    // Clean up when leaving the page
+    document.addEventListener('turbo:before-render', function() {
+      salarioInput.value = '';
+      document.getElementById('desconto_inss').innerText = '0.00';
+    });
+  }
+
+  // For Turbolinks
+  document.addEventListener('turbolinks:load', initializeCalculator);
+  // For Turbo (Rails 7+)
+  document.addEventListener('turbo:load', initializeCalculator);
+  // Fallback for regular page load
+  initializeCalculator();
+</script>

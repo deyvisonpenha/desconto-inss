@@ -1,23 +1,44 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Desconto Inss" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Desconto INSS</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= yield :head %>
-
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%# <%= javascript_include_tag "application", type: "module", "data-turbo-track": "reload" %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="prose">
+  <div class="w-screen">
+    <nav class="bg-white shadow-lg">
+      <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+          <a class="text-xl font-semibold text-gray-800" href="/">Desconto INSS</a>
+          <div class="flex space-x-4">
+            <ul class="flex space-x-4 list-none">
+              <li>
+                <%= link_to 'Proponentes', proponentes_path, class: 'text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium' %>
+              </li>
+              <li>
+                <%= link_to 'Relatório', relatorio_proponentes_path, class: 'text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium' %>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-4 mt-8">
+      <% if notice %>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+          <%= notice %>
+        </div>
+      <% end %>
+      <%= yield %>
+    </div>
+    </div>
   </body>
 </html>
