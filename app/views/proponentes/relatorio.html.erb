@@ -31,7 +31,20 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  function initChart() {
+    // Check if Chart is available
+    if (typeof Chart === 'undefined') {
+      // If Chart is not loaded yet, wait a bit and try again
+      setTimeout(initChart, 100);
+      return;
+    }
+
+    // Check if chart already exists and destroy it
+    const existingChart = Chart.getChart('chart');
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
     const ctx = document.getElementById('chart').getContext('2d');
     new Chart(ctx, {
       type: 'bar',
@@ -54,5 +67,9 @@
         }
       }
     });
-  });
+  }
+
+  // Listen for both events to handle both regular page loads and Turbo navigation
+  document.addEventListener('turbo:load', initChart);
+  document.addEventListener('DOMContentLoaded', initChart);
 </script>
