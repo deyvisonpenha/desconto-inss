@@ -1,7 +1,11 @@
-# README
+# Functional Specification
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This system allows the management of Proponentes (candidates) and their details, with functionalities for CRUD operations, INSS discount calculation, and generating reports.
+
+<img width="1175" alt="image" src="https://github.com/user-attachments/assets/936c592b-b0b2-4ee5-bbd3-e6518710bf0b">
+<img width="1175" alt="image" src="https://github.com/user-attachments/assets/95028f2b-16de-48ca-8f3a-5da29bc58ad5">
+<img width="1175" alt="image" src="https://github.com/user-attachments/assets/a5fbcab5-98bb-4a2e-9771-34978f9eae1d">
+
 
 This application requires Docker to be installed and running. To start the PostgreSQL database and Adminer, run the following command in the project's root directory:
 
