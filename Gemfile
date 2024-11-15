@@ -26,12 +26,12 @@ gem "jbuilder"
 # gem "bcrypt", "~> 3.1.7"
 
 # Gems that will be usefull in the project
-gem 'chartkick'
-gem 'groupdate'
-gem 'kaminari'         # Pagination
-gem 'redis-rails'      # Redis
-gem 'sidekiq'          # Sidekiq for background jobs
-gem 'rubocop-rails'    # Lint
+gem "chartkick"
+gem "groupdate"
+gem "kaminari"         # Pagination
+gem "redis-rails"      # Redis
+gem "sidekiq"          # Sidekiq for background jobs
+gem "rubocop-rails"    # Lint
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -40,7 +40,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # Access ENV on Rails
-gem 'dotenv-rails', groups: [:development, :test]
+gem "dotenv-rails", groups: [ :development, :test ]
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
@@ -55,7 +55,7 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem 'rspec-rails'
+  gem "rspec-rails"
 end
 
 group :development do

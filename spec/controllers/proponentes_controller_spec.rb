@@ -25,7 +25,7 @@ RSpec.describe ProponentesController, type: :controller do
     it 'assigns @proponentes' do
       proponente = Proponente.create(valid_attributes)
       get :index
-      expect(assigns(:proponentes)).to eq([proponente])
+      expect(assigns(:proponentes)).to eq([ proponente ])
     end
   end
 

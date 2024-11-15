@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -9,13 +11,15 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
 
-
+  mount Sidekiq::Web => '/sidekiq'
+  
   resources :proponentes do
     collection do
-      get 'relatorio'
+      get "relatorio"
     end
     member do
-      get 'calcula_inss'
+      get "calcula_inss"
+      patch 'update_salary'  # Add a route for updating salary
     end
   end
 

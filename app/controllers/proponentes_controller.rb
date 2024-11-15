@@ -6,9 +6,13 @@ class ProponentesController < ApplicationController
   def create
     @proponente = Proponente.new(proponente_params)
     if @proponente.save
-      redirect_to proponentes_path, notice: 'Proponente cadastrado com sucesso.'
+      salario_liquido = @proponente.salario - inss_discount(@proponente.salario)
+      # Enqueue the Sidekiq job after saving the Proponente
+      AtualizaSalarioJob.perform_later(@proponente.id, salario_liquido)
+
+      redirect_to proponentes_path, notice: "Proponente cadastrado com sucesso."
     else
-      flash.now[:alert] = 'Erro ao salvar o proponente. Verifique os campos abaixo.'
+      flash.now[:alert] = "Erro ao salvar o proponente. Verifique os campos abaixo."
       render :new, status: :unprocessable_entity
     end
   end
@@ -24,7 +28,11 @@ class ProponentesController < ApplicationController
   def update
     @proponente = Proponente.find(params[:id])
     if @proponente.update(proponente_params)
-      redirect_to proponentes_path, notice: 'Proponente atualizado com sucesso.'
+      salario_liquido = @proponente.salario - inss_discount(@proponente.salario)
+      # Enqueue the Sidekiq job after updating the Proponente
+      AtualizaSalarioJob.perform_later(@proponente.id, salario_liquido)
+
+      redirect_to proponentes_path, notice: "Proponente atualizado com sucesso."
     else
       render :edit
     end
@@ -33,7 +41,7 @@ class ProponentesController < ApplicationController
   def destroy
     @proponente = Proponente.find(params[:id])
     @proponente.destroy
-    redirect_to proponentes_path, notice: 'Proponente excluído com sucesso.'
+    redirect_to proponentes_path, notice: "Proponente excluído com sucesso."
   end
 
   def calcula_inss
@@ -45,9 +53,19 @@ class ProponentesController < ApplicationController
   def relatorio
     @faixas_salariais = Proponente.salario_faixas.transform_values(&:count)
   end
-  
+
+  def update_salary
+    proponente = Proponente.find(params[:id])
+    novo_salario = params[:novo_salario].to_f
+    salario_liquido = novo_salario - inss_discount(novo_salario)
+
+    AtualizaSalarioJob.perform_later(proponente.id, salario_liquido)
+    # Provide feedback to the user
+    redirect_to proponentes_path, notice: "Salário atualizado com sucesso!"
+  end
+
   private
-  
+
   def inss_discount(salario)
     case salario
     when 0..1045
@@ -64,6 +82,4 @@ class ProponentesController < ApplicationController
   def proponente_params
     params.require(:proponente).permit(:nome, :cpf, :data_nascimento, :endereco, :bairro, :cidade, :estado, :cep, :telefone, :salario)
   end
-
 end
-  
